@@ -1,5 +1,8 @@
 import Home from ".";
 import About from "./about";
+import Profile from "./profile";
+
+import NotFound from "./404";
 
 export const appRoutes = [
   {
@@ -9,5 +12,13 @@ export const appRoutes = [
   {
     path: "/about",
     component: <About />,
+  },
+  {
+    path: "/profile",
+    component: <Profile />,
+  },
+  {
+    path: "*",
+    component: <NotFound />,
   },
 ];
