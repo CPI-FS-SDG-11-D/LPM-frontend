@@ -7,10 +7,10 @@ export default function Home() {
   const [searchParams] = useSearchParams();
 
   return (
-    <div className=" h-[300vh] bg-[#f4f5f9] pt-10">
+    <div className=" h-[300vh] bg-[#f4f5f9]">
       <SideNav />
 
-      <main className="mr-10 h-full pl-80">
+      <main className="mr-10 h-full pl-64 pt-10">
         <TopHeader isLoggedin={false} />
         {!searchParams.has("section") ? (
           <p className="pt-6 text-4xl font-bold ">Ini Latest Home</p>
@@ -26,7 +26,7 @@ function TopHeader({ isLoggedin }: { isLoggedin: boolean }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
-    <header className=" flex h-16 w-full items-center justify-between rounded-lg bg-white px-10 shadow-md">
+    <header className=" flex h-16 w-full items-center justify-between rounded-lg bg-white px-10 shadow-sm">
       <ul className="flex flex-row items-center gap-2">
         <li>
           <button

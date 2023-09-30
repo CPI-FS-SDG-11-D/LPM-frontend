@@ -3,7 +3,7 @@ import { Image } from "@mantine/core";
 
 export function SideNav() {
   return (
-    <nav className="fixed ml-10 h-96 w-fit  rounded bg-white py-10 pl-4 pr-4 shadow-md">
+    <nav className="fixed  h-full w-fit  rounded bg-white pl-4 pr-4 pt-10 shadow-sm">
       <h1 className="pr-14 text-2xl font-bold">LOGO HERE</h1>
       <ul className="flex w-full flex-col gap-2 pt-8 text-lg font-normal">
         <li>
