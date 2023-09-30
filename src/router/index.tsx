@@ -1,5 +1,5 @@
 import { SideNav } from "../components/navbar";
-import { Image, Avatar, Menu } from "@mantine/core";
+import { Image, Avatar, Menu, Textarea } from "@mantine/core";
 
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -11,12 +11,36 @@ export default function Home() {
       <SideNav />
 
       <main className="mr-10 h-full pl-64 pt-10">
-        <TopHeader isLoggedin={false} />
-        {!searchParams.has("section") ? (
-          <p className="pt-6 text-4xl font-bold ">Ini Latest Home</p>
-        ) : (
-          <p className="pt-6 text-4xl font-bold ">Ini Trending Home</p>
-        )}
+        <TopHeader isLoggedin={true} />
+        <div className="flex w-full flex-row gap-20 pt-6">
+          <div className="flex w-4/5 flex-col gap-4 ">
+            <div className="h-fit w-full rounded-md bg-white px-6 py-4 shadow-sm">
+              <div className="flex flex-row gap-2">
+                <Avatar size={"lg"} />
+                <Textarea
+                  placeholder="Write here"
+                  autosize
+                  minRows={2}
+                  style={{ width: "100%" }}
+                />
+              </div>
+              <div className="flex justify-end pt-4">
+                <button
+                  type="button"
+                  className=" rounded-lg bg-[#4c62f0] px-4 py-2 text-white"
+                >
+                  Create Post
+                </button>
+              </div>
+            </div>
+            {!searchParams.has("section") ? (
+              <p className="text-4xl font-bold ">Ini Latest Home</p>
+            ) : (
+              <p className="text-4xl font-bold ">Ini Trending Home</p>
+            )}
+          </div>
+          <div className="w-1/5 rounded bg-white shadow-sm"></div>
+        </div>
       </main>
     </div>
   );
