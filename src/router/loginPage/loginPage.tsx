@@ -15,15 +15,27 @@ import {
   Container,
 } from '@mantine/core';
 
+import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+
 export default function loginPage(props: PaperProps) {
+
+  const getAccessToken = useMutation({
+    mutationFn: async(reqBody : object) =>{
+      const response = await axios.post("https://lpm-api.glitch.me/api/login",reqBody)
+      return response.data
+    },
+    onError:()=>alert("Akun tidak tersedia"),
+    onSuccess(data) {
+      console.log(data)
+      localStorage.setItem("token",data.token)
+    },
+  })
     
-    const [type, toggle] = useToggle(['login', 'register']);
-  const form = useForm({
+    const form = useForm({
     initialValues: {
       email: '',
-      name: '',
       password: '',
-      terms: true,
     },
 
     validate: {
@@ -41,17 +53,10 @@ export default function loginPage(props: PaperProps) {
 
         <Divider  labelPosition="center" my="lg" />
 
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form onSubmit={form.onSubmit((value) => {
+          getAccessToken.mutate(value)
+        })}>
           <Stack>
-            {type === 'register' && (
-              <TextInput
-                label="Name"
-                placeholder="Your name"
-                value={form.values.name}
-                onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                radius="md"
-              />
-            )}
 
             <TextInput
               required
@@ -73,21 +78,15 @@ export default function loginPage(props: PaperProps) {
               radius="md"
             />
 
-            {type === 'register' && (
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-              />
-            )}
+       
           </Stack>
 
           <Group justify="space-between" mt="xl">
-            <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
+            {/* <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
               {type === 'register'
                 ? 'Already have an account? Login'
                 : "Tidak punya akun? buat disini"}
-            </Anchor>
+            </Anchor> */}
             <button className='rounded-md bg-[#4c62f0] text-sm text-white p-1 px-2'>Masuk</button>
           </Group>
         </form>
