@@ -3,7 +3,9 @@ import About from "./about";
 import Profile from "./profile";
 import NotFound from "./404";
 import Login from "./loginPage/loginPage";
-
+import Register from "./registerPage/registerPage";
+import Search from "./jelajah";
+import PostDetail from "./detail";
 
 export const appRoutes = [
   {
@@ -15,7 +17,6 @@ export const appRoutes = [
     component: <About />,
   },
   {
-
     path: "/profile",
     component: <Profile />,
   },
@@ -26,5 +27,17 @@ export const appRoutes = [
   {
     path: "/login",
     component: <Login />,
+  },
+  {
+    path: "/register",
+    component: <Register />,
+  },
+  {
+    path: "/jelajah",
+    component: <Search />,
+  },
+  {
+    path: "/detail",
+    component: <PostDetail />,
   },
 ];
