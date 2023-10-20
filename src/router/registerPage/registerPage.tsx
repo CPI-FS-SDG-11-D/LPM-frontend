@@ -1,5 +1,4 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
+import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
@@ -11,97 +10,128 @@ import {
   Divider,
   Checkbox,
   Stack,
-} from '@mantine/core';
-import axios from 'axios';
+} from "@mantine/core";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { upperFirst } from "@mantine/hooks";
 
 export function AuthenticationForm(props: PaperProps) {
-  const [type] = useToggle(['register']);
   const form = useForm({
     initialValues: {
-      email: '',
-      name: '',
-      password: '',
-      terms: true,
+      username: '',
+      email: "",
+      password: "",
+      terms: false,
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length >= 6 ? null : 'Password should include at least 6 characters'),
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
+      password: (val) =>
+        val.length >= 6
+          ? null
+          : "Password should include at least 6 characters",
     },
   });
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); 
+    event.preventDefault();
+    if (form.values.password.length < 6) {
+      alert("Password harus terdiri minimal dari 6 karakter");
+      return;
+    }
+
+    if (!form.values.terms) {
+      alert("Anda harus menyetujui syarat dan ketentuan.");
+      return;
+    }
     try {
-      const response = await axios.post('https://lpm-api.glitch.me/endpoint', {
-        baseUrl: 'https://lpm-api.glitch.me',
+      const response = await axios.post('https://lpm-api.glitch.me/api/register', {
+        username: form.values.username,
+        email: form.values.email,
+        password: form.values.password,
       });
       console.log('Response:', response.data);
       window.alert('Registration successful!');
-      window.location.href = '/login';
+      navigate("/login");
     } catch (error) {
-      console.error('Error:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          window.alert("Email is already registered.");
+        } else {
+          console.error('Error:', error);
+        }
+      } else {
+        console.error('Error:', error);
+      }
     }
   };
 
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
-      <Text size="lg" fw={500}>
-        Selamat datang di Layanan Pengaduan Masyarakat
-      </Text>
+    <div className="flex h-screen items-center justify-center bg-[#f4f5f9]">
+      <Paper mx="auto" w="25rem" radius="md" p="xl" withBorder {...props}>
+        <Text size="lg" fw={500}>
+          Daftar
+        </Text>
 
-      <Divider label="Daftar di sini" labelPosition="center" my="lg" />
+        <Divider labelPosition="center" my="lg" />
 
-      <form onSubmit={handleSubmit}>
-        <Stack>
-          {type === 'register' && (
+        <form onSubmit={handleSubmit}>
+          <Stack>
             <TextInput
+              required
               label="Username"
-              className="w-1/2 p-2 border rounded-md"
-              placeholder="Username"
-              value={form.values.name}
-              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+              placeholder="Masukan username Anda"
+              value={form.values.username}
+              onChange={(event) =>
+                form.setFieldValue("username", event.currentTarget.value)
+              }
               radius="md"
             />
-          )}
 
-          <TextInput
-            required
-            label="Email"
-            className="w-1/2 p-2 border rounded-md"
-            placeholder="hello@email.co"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email}
-            radius="md"
-          />
+            <TextInput
+              required
+              label="Email"
+              placeholder="Masukan email Anda"
+              value={form.values.email}
+              onChange={(event) =>
+                form.setFieldValue("email", event.currentTarget.value)
+              }
+              error={form.errors.email && "Invalid email"}
+              radius="md"
+              type="email"
+            />
 
-          <PasswordInput
-            required
-            label="Password"
-            className="w-1/2 p-2 border rounded-md"
-            placeholder="password"
-            value={form.values.password}
-            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password}
-            radius="md"
-          />
+            <PasswordInput
+              required
+              label="Password"
+              placeholder="Masukan kata sandi Anda"
+              value={form.values.password}
+              onChange={(event) =>
+                form.setFieldValue("password", event.currentTarget.value)
+              }
+              error={
+                form.errors.password &&
+                "Password should include at least 6 characters"
+              }
+              radius="md"
+            />
 
-          {type === 'register' && (
             <Checkbox
               label="I accept terms and conditions"
               checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+              onChange={(event) => form.setFieldValue("terms", event.currentTarget.checked)}
             />
-          )}
-        </Stack>
+          </Stack>
 
-        <Group justify="space-between" mt="xl">
-          <Button type="submit" radius="xl">
-            {upperFirst(type)}
-          </Button>
-        </Group>
-      </form>
-    </Paper>
+          <Group justify="space-between" mt="xl">
+            <Button type="submit" radius="xl">
+              {upperFirst("daftar")}
+            </Button>
+          </Group>
+        </form>
+      </Paper>
+    </div>
   );
 }
