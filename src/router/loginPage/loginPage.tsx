@@ -8,6 +8,7 @@ import {
   PaperProps,
   Divider,
   Stack,
+  Image,
 } from "@mantine/core";
 
 import { useCookies } from "react-cookie";
@@ -16,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+import { SERVER_URL } from "../../configs/url";
 // import { useEffect } from "react";
 
 type ProfileData = {
@@ -36,26 +38,20 @@ export default function LoginPage(props: PaperProps) {
   const getProfileInfo = useQuery({
     queryKey: ["profileInfo"],
     queryFn: async () => {
-      const response = await axios.get(
-        "https://lpm-api.glitch.me/api/profile",
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`,
-          },
+      const response = await axios.get(`${SERVER_URL}/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${cookies.token}`,
         },
-      );
+      });
       return response.data as ProfileData;
     },
 
     enabled: !!cookies.token,
   });
 
-  const getAccessToken = useMutation({
+  const postLoginData = useMutation({
     mutationFn: async (reqBody: object) => {
-      const response = await axios.post(
-        "https://lpm-api.glitch.me/api/login",
-        reqBody,
-      );
+      const response = await axios.post(`${SERVER_URL}/api/login`, reqBody);
       return response.data;
     },
     onError: () => alert("Akun tidak tersedia"),
@@ -89,6 +85,8 @@ export default function LoginPage(props: PaperProps) {
     navigate("/");
   }
 
+  // console.log(getProfileInfo.status, postLoginData.status);
+
   return (
     <div className="flex h-screen items-center justify-center bg-[#f4f5f9]">
       <Paper mx="auto" w="25rem" radius="md" p="xl" withBorder {...props}>
@@ -100,7 +98,7 @@ export default function LoginPage(props: PaperProps) {
 
         <form
           onSubmit={form.onSubmit((value) => {
-            getAccessToken.mutate(value);
+            postLoginData.mutate(value);
           })}
         >
           <Stack>
@@ -138,8 +136,23 @@ export default function LoginPage(props: PaperProps) {
                 ? 'Already have an account? Login'
                 : "Tidak punya akun? buat disini"}
             </Anchor> */}
-            <button className="rounded-md bg-[#4c62f0] p-1 px-2 text-sm text-white">
-              Masuk
+            <button
+              disabled={postLoginData.isLoading}
+              className="rounded-md bg-[#4c62f0] px-2 py-2 text-sm text-white disabled:opacity-90"
+            >
+              {postLoginData.isLoading ? (
+                // <div className="flex flex-row items-center gap-2">
+                //   <div className="h-3 w-3 animate-ping rounded-full bg-white"></div>
+                //   <p>Loading</p>
+                // </div>
+                <Image
+                  src="./spinner.svg"
+                  alt="loading"
+                  className="h-6 w-6 animate-spin"
+                />
+              ) : (
+                "Masuk"
+              )}
             </button>
           </Group>
         </form>
