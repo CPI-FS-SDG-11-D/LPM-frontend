@@ -2,7 +2,7 @@ import { SideNav } from "../components/navbar";
 import { TopHeader } from "../components/header";
 import { TimelinePostCard } from "../components/cards";
 
-import { Textarea, Avatar, Image } from "@mantine/core";
+import { Textarea, Avatar, Image, FileInput } from "@mantine/core";
 
 import { useSearchParams } from "react-router-dom";
 
@@ -65,11 +65,6 @@ export default function Home() {
               </>
             )}
 
-            {/* <TimelinePostCard />
-            <TimelinePostCard />
-            <TimelinePostCard />
-            <TimelinePostCard /> */}
-
             {!searchParams.has("section") ? (
               <p className="text-4xl font-bold ">Ini Latest Home</p>
             ) : (
@@ -84,37 +79,98 @@ export default function Home() {
   );
 }
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+type CreatePostProps = {
+  title: string;
+  description: string;
+  urlComplaint?: string;
+};
 
 function CreatePost() {
-  const [post, setPost] = useState({});
+  const [post, setPost] = useState<CreatePostProps>({
+    title: "",
+    description: "",
+  });
 
-  const [cookies] = useCookies(["token"]);
+  const [cookies] = useCookies(["token", "profile"]);
 
   const queryClient = useQueryClient();
 
-  const createPost = useMutation({
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (photo) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(photo);
+    } else {
+      setPhotoUrl(null);
+    }
+    return () => {
+      setPhotoUrl(null);
+    };
+  }, [photo]);
+
+  const uploadPhoto = useMutation({
     mutationFn: async () => {
-      const response = await axios.post(`${SERVER_URL}/api/complaints`, post, {
-        headers: {
-          Authorization: `Bearer ${cookies.token}`,
+      const formData = new FormData();
+      formData.append("image", photo as Blob);
+      const response = await axios.post(
+        `${SERVER_URL}/api/upload-complaint`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
         },
-      });
+      );
+      return response.data;
+    },
+    onError: () => alert("Upload foto gagal"),
+    onSuccess: (data) => {
+      // alert("Upload foto berhasil");
+      // console.log(data);
+      createPost.mutate(data.urlComplaint);
+    },
+  });
+
+  const createPost = useMutation({
+    mutationFn: async (urlComplaint) => {
+      let postData = { ...post };
+      if (typeof urlComplaint == "string") {
+        postData = { ...post, urlComplaint };
+      }
+      const response = await axios.post(
+        `${SERVER_URL}/api/complaints`,
+        postData,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        },
+      );
       return response.data;
     },
     onError: () => alert("Terjadi kesalahan"),
     onSuccess: async () => {
       await queryClient.invalidateQueries(["allComplaints"]);
+      setPost({ title: "", description: "" });
+      setPhoto(null);
     },
   });
 
   return (
     <div className="h-fit w-full rounded-md bg-white px-6 py-4 shadow-sm">
       <div className="flex flex-row gap-2">
-        <Avatar size={"lg"} />
+        <Avatar size={"lg"} src={cookies.profile.urlUser} />
         <div className="flex w-full flex-col gap-2">
           <Textarea
             placeholder="Tulis judul aduan disini"
+            value={post.title}
             autosize
             minRows={1}
             style={{ width: "100%" }}
@@ -124,21 +180,40 @@ function CreatePost() {
 
           <Textarea
             placeholder="Tulis deskripsi aduan disini"
+            value={post.description}
             autosize
             minRows={2}
             style={{ width: "100%" }}
             onChange={(e) => setPost({ ...post, description: e.target.value })}
           />
+          <div className="max-h-96">
+            <Image src={photoUrl} className="h-full object-contain" />
+          </div>
         </div>
       </div>
-      <div className="flex justify-end pt-4">
+      <div className="flex items-center justify-end gap-2 pt-4">
+        <FileInput
+          value={photo}
+          onChange={setPhoto}
+          placeholder="Tambah foto"
+          accept="image/png,image/jpeg"
+          clearable
+          clearButtonProps={{ "aria-label": "Remove photo" }}
+        />
         <button
           type="button"
           className=" rounded-lg bg-[#4c62f0] px-4 py-2 text-white disabled:opacity-90"
-          onClick={() => createPost.mutate()}
-          disabled={createPost.isLoading}
+          // onClick={() => createPost.mutate()}
+          onClick={() => {
+            if (photo === null) {
+              createPost.mutate();
+            } else {
+              uploadPhoto.mutate();
+            }
+          }}
+          disabled={createPost.isLoading || uploadPhoto.isLoading}
         >
-          {createPost.isLoading ? (
+          {createPost.isLoading || uploadPhoto.isLoading ? (
             <Image
               src="./spinner.svg"
               alt="loading"
@@ -185,6 +260,13 @@ function ViralComplaints() {
               </li>
             );
           })}
+        {complaintsFetch.isLoading && (
+          <>
+            <div className="h-10 w-full animate-pulse rounded-md bg-gray-400"></div>
+            <div className="h-10 w-full animate-pulse rounded-md bg-gray-400"></div>
+            <div className="h-10 w-full animate-pulse rounded-md bg-gray-400"></div>
+          </>
+        )}
       </ul>
     </div>
   );
