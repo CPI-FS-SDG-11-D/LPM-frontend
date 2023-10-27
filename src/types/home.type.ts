@@ -1,15 +1,18 @@
 export type AllComplaints = {
-  complaints: {
+  feedback: {
+    is_upvote: boolean;
+    is_downvote: boolean;
+  };
+  complaint: {
     _id: string;
     title: string;
     description: string;
-    keterangan: string;
-    username: string;
+    status: "pending" | "in progress" | "resolved";
     totalUpvotes: number;
-    downvotes: number;
-    vote_flag: string;
-    status: string;
-  }[];
+    totalDownvotes: number;
+    createdAt: string;
+    urlComplaint: string | null;
+  };
 };
 
 export type ViralComplaints = {

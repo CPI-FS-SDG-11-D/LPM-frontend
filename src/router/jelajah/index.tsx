@@ -9,19 +9,24 @@ import { useQuery } from "@tanstack/react-query";
 import { SERVER_URL } from "../../configs/url";
 
 type SearchData = {
-  username: string | null;
-  complaints: {
+  username: string;
+  urlUser: string;
+  complaint: {
     _id: string;
     userID: string;
     title: string;
     description: string;
-    status: string;
+    status: "pending" | "in progress" | "resolved";
     totalUpvotes: number;
     totalDownvotes: number;
     __v: number;
     createdAt: string;
     updatedAt: string;
-  }[];
+  };
+  feedback: {
+    is_upvote: boolean;
+    is_downvote: boolean;
+  };
 };
 
 export default function Search() {
@@ -33,7 +38,8 @@ export default function Search() {
       const data = await axios.get(
         `${SERVER_URL}/api/complaints/search?title=${searchParams.get("cari")}`,
       );
-      return data.data as SearchData;
+
+      return data.data as SearchData[];
     },
   });
 
@@ -47,27 +53,27 @@ export default function Search() {
         </h1>
         <div className="flex w-4/5 flex-col gap-4 ">
           {searchFetch.isSuccess &&
-            searchFetch.data.complaints.map((complaint) => {
+            searchFetch.data.map((data) => {
               return (
                 <TimelinePostCard
-                  key={complaint._id}
-                  _id={complaint._id}
-                  description={complaint.description}
-                  title={complaint.title}
-                  totalUpvotes={complaint.totalUpvotes}
-                  status={complaint.status}
+                  key={data.complaint._id}
+                  _id={data.complaint._id}
+                  description={data.complaint.description}
+                  title={data.complaint.title}
+                  totalUpvotes={data.complaint.totalUpvotes}
+                  status={data.complaint.status}
+                  username={data.username}
+                  createdAt={data.complaint.createdAt}
+                  // imageUrl={data.complaint.}
                 />
               );
             })}
-          {/* <TimelinePostCard />
-          <TimelinePostCard />
-          <TimelinePostCard />
-          <TimelinePostCard /> */}
+
           {searchFetch.isLoading && (
             <>
-              <div className="h-36 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
-              <div className="h-36 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
-              <div className="h-36 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
+              <div className="h-48 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
+              <div className="h-48 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
+              <div className="h-48 w-full animate-pulse rounded-md bg-gray-400 px-6 py-4 shadow-sm"></div>
             </>
           )}
           {searchFetch.isError && (

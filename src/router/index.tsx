@@ -2,33 +2,61 @@ import { SideNav } from "../components/navbar";
 import { TopHeader } from "../components/header";
 import { TimelinePostCard } from "../components/cards";
 
+import { useState, useEffect } from "react";
+
 import { Textarea, Avatar, Image, FileInput } from "@mantine/core";
 
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 import { useCookies } from "react-cookie";
 
 import axios from "axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import { useInView } from "react-intersection-observer";
 
 import { AllComplaints, ViralComplaints } from "../types/home.type";
 
 import { SERVER_URL } from "../configs/url";
 
 export default function Home() {
-  const [searchParams] = useSearchParams();
+  // const [searchParams] = useSearchParams();
 
   const [cookies] = useCookies(["token"]);
 
-  const allComplaints = useQuery({
-    queryKey: ["allComplaints"],
-    queryFn: async () => {
-      const response = await axios.get(`${SERVER_URL}/api/complaints`, {
-        headers: {
-          Authorization: `Bearer ${cookies.token}`,
+  const infiniteComplaints = useInfiniteQuery({
+    queryKey: ["infiniteComplaints"],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await axios.get(
+        `${SERVER_URL}/api/complaints?page=${pageParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
         },
-      });
-      return response.data as AllComplaints;
+      );
+
+      return response.data.complaints as AllComplaints[];
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < 5) {
+        return undefined;
+      }
+
+      return pages.length + 1;
+    },
+  });
+
+  const [ref] = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        infiniteComplaints.fetchNextPage();
+      }
     },
   });
 
@@ -42,22 +70,25 @@ export default function Home() {
           <div className="flex w-4/5 flex-shrink-0 flex-col gap-4 ">
             {cookies?.token != undefined && <CreatePost />}
 
-            {allComplaints.isSuccess &&
-              allComplaints.data.complaints.map((complaint, index) => {
-                return (
-                  <TimelinePostCard
-                    key={index}
-                    _id={complaint._id}
-                    description={complaint.description}
-                    title={complaint.title}
-                    totalUpvotes={complaint.totalUpvotes}
-                    status={complaint.status}
-                    username={complaint.username}
-                  />
-                );
+            {infiniteComplaints.isSuccess &&
+              infiniteComplaints.data.pages.map((data) => {
+                return data.map((complaint, index) => {
+                  return (
+                    <TimelinePostCard
+                      key={index}
+                      _id={complaint.complaint._id}
+                      description={complaint.complaint.description}
+                      title={complaint.complaint.title}
+                      totalUpvotes={complaint.complaint.totalUpvotes}
+                      status={complaint.complaint.status}
+                      username={complaint.complaint._id}
+                      createdAt={complaint.complaint.createdAt}
+                      imageUrl={complaint.complaint.urlComplaint}
+                    />
+                  );
+                });
               })}
-
-            {allComplaints.isLoading && (
+            {infiniteComplaints.isLoading && (
               <>
                 <div className="h-52 w-full animate-pulse rounded-md bg-gray-400"></div>
                 <div className="h-52 w-full animate-pulse rounded-md bg-gray-400"></div>
@@ -65,13 +96,40 @@ export default function Home() {
               </>
             )}
 
-            {!searchParams.has("section") ? (
+            {/* <button
+              type="button"
+              onClick={() => infiniteComplaints.fetchNextPage()}
+              disabled={!infiniteComplaints.hasNextPage}
+              className={`${
+                infiniteComplaints.isLoading && "invisible"
+              } transition hover:text-[#4c62f0]`}
+            >
+              {infiniteComplaints.isFetchingNextPage
+                ? "Memuat..."
+                : infiniteComplaints.hasNextPage
+                ? "Klik untuk lihat lebih banyak"
+                : "Akhir dari halaman"}
+            </button> */}
+            <p
+              ref={ref}
+              className={`${
+                infiniteComplaints.isLoading && "invisible"
+              } text-center transition hover:text-[#4c62f0]`}
+            >
+              {infiniteComplaints.isFetchingNextPage
+                ? "Memuat lebih banyak..."
+                : infiniteComplaints.hasNextPage
+                ? ""
+                : "Akhir dari halaman"}
+            </p>
+
+            {/* {!searchParams.has("section") ? (
               <p className="text-4xl font-bold ">Ini Latest Home</p>
             ) : (
               <p className="text-4xl font-bold ">Ini Trending Home</p>
-            )}
+            )} */}
           </div>
-          {/* <div className="max-h-80 w-1/5 rounded bg-white shadow-sm"></div> */}
+
           <ViralComplaints />
         </div>
       </main>
@@ -79,7 +137,7 @@ export default function Home() {
   );
 }
 
-import { useState, useEffect } from "react";
+import { notifications } from "@mantine/notifications";
 
 type CreatePostProps = {
   title: string;
@@ -160,6 +218,12 @@ function CreatePost() {
       await queryClient.invalidateQueries(["allComplaints"]);
       setPost({ title: "", description: "" });
       setPhoto(null);
+      notifications.show({
+        title: "Berhasil",
+        message: "Aduan berhasil dibuat",
+        color: "teal",
+        icon: <img src="/success.gif" alt="success" />,
+      });
     },
   });
 
@@ -199,6 +263,7 @@ function CreatePost() {
           accept="image/png,image/jpeg"
           clearable
           clearButtonProps={{ "aria-label": "Remove photo" }}
+          classNames={{ input: "border-[#4c62f0]" }}
         />
         <button
           type="button"

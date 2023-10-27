@@ -94,7 +94,7 @@ export function TopHeader() {
                 <p className="pointer-events-none">
                   Halo, {cookies.profile.username}
                 </p>
-                <Avatar size={"md"} />
+                <Avatar size={"md"} src={cookies.profile.urlUser} />
                 <Image src="./arrow-down.svg" alt="home" h={15} w={15} />
               </div>
             </Menu.Target>
