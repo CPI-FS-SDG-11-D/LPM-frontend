@@ -4,7 +4,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { Image, Menu } from "@mantine/core";
+import { Image, Menu, Avatar } from "@mantine/core";
 
 import { useCookies } from "react-cookie";
 
@@ -13,6 +13,7 @@ export function TopHeader() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies(["token", "profile"]);
 
   return (
@@ -93,6 +94,7 @@ export function TopHeader() {
                 <p className="pointer-events-none">
                   Halo, {cookies.profile.username}
                 </p>
+                <Avatar size={"md"} src={cookies.profile.urlUser} />
                 <Image src="./arrow-down.svg" alt="home" h={15} w={15} />
               </div>
             </Menu.Target>
@@ -120,7 +122,7 @@ export function TopHeader() {
               Login
             </Link>
             <Link
-              to={"/signup"}
+              to={"/register"}
               className="rounded-lg border border-[#dbdeeb] px-4 py-2 "
             >
               Sign Up

@@ -3,7 +3,7 @@ import About from "./about";
 import Profile from "./profile";
 import NotFound from "./404";
 import Login from "./loginPage/loginPage";
-import Register from "./registerPage/registerPage";
+import { AuthenticationForm as Register } from "./registerPage/registerPage";
 import Search from "./jelajah";
 import PostDetail from "./detail";
 
