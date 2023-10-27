@@ -97,7 +97,9 @@ export function TimelinePostCard({
 
         <p className="truncate py-4 pl-2 pr-36">{description}</p>
         <div className="max-h-20">
-          <Image src={imageUrl} className="h-full object-contain" />
+          {imageUrl != "null" && (
+            <Image src={imageUrl} className="h-full object-contain" />
+          )}
         </div>
       </Link>
       <div className="flex flex-row items-center gap-2 pl-2 pt-4">

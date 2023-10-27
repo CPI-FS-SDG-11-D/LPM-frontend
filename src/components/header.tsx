@@ -14,7 +14,7 @@ export function TopHeader() {
   const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "profile"]);
+  const [cookies, , removeCookie] = useCookies(["token", "profile"]);
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between rounded-lg bg-white px-20 shadow-sm">
