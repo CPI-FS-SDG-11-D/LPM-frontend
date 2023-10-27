@@ -140,7 +140,9 @@ export default function PostDetail() {
             </p>
 
             <p className="px-2 py-4">{postDetail.data.complaint.description}</p>
-            <Image src={postDetail.data.complaint.urlComplaint} />
+            {postDetail.data.complaint.urlComplaint != "null" && (
+              <Image src={postDetail.data.complaint.urlComplaint} />
+            )}
             <div className="flex flex-row items-center gap-2 pl-2 pt-4">
               <button type="button">
                 <Like
