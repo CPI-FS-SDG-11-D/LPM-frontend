@@ -52,12 +52,18 @@ export default function Profile() {
     },
   });
 
+  const navigate = useNavigate();
+
+  const navigateToEdit = () => {
+    navigate("/editprofil");
+  };
+
   return (
     <div className="h-full bg-[#f4f5f9] ">
       <SideNav />
 
       <main className="mr-10 h-full pl-64 pt-10">
-        <Text size="md" fw={500}>
+        <Text className="mt-12" size="md" fw={500}>
           Informasi Akun
         </Text>
         <Space h="sm"></Space>
@@ -91,8 +97,9 @@ export default function Profile() {
             <button
               type="button"
               className=" rounded-lg bg-[#4c62f0] px-4 py-2 text-white"
+              onClick={navigateToEdit}
             >
-              Edit
+              Edit Profil
             </button>
           </div>
         </Card>

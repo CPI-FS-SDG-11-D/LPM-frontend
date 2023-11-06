@@ -1,6 +1,7 @@
 import { SideNav } from "../components/navbar";
 import { TopHeader } from "../components/header";
 import { TimelinePostCard } from "../components/cards";
+import "../App.css";
 
 import { useState, useEffect } from "react";
 
@@ -61,7 +62,7 @@ export default function Home() {
   });
 
   return (
-    <div className=" min-h-[100vh] bg-[#f4f5f9] pb-8">
+    <div className="min-h-[100vh] bg-[#f4f5f9] pb-8">
       <SideNav />
 
       <TopHeader />

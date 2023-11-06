@@ -28,7 +28,7 @@ export function SideNav() {
               } py-3 pl-4 pr-14`
             }
           >
-            <Image src="./user.svg" alt="home" h={28} w={28} />
+            <Image src="./user.svg" alt="home" h={20} w={20} />
             <p>Profil</p>
           </NavLink>
         </li>
@@ -41,7 +41,7 @@ export function SideNav() {
               } py-3 pl-4 `
             }
           >
-            <Image src="./bookmark.svg" alt="home" h={27} w={27} />
+            <Image src="./bookmark.svg" alt="home" h={20} w={20} />
             <p className="text-base">Post Tersimpan</p>
           </NavLink>
         </li>

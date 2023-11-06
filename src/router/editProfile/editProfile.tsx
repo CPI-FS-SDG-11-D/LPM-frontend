@@ -109,7 +109,7 @@ export default function editProfile() {
       <SideNav />
 
       <main className="mr-10 h-full pl-64 pt-10">
-        <Text size="md" fw={500}>
+        <Text className="mt-12" size="md" fw={500}>
           Informasi Akun
         </Text>
         <Space h="sm"></Space>
@@ -119,21 +119,30 @@ export default function editProfile() {
           radius="md"
           withBorder
         >
-          <Avatar
-            radius="xl"
-            size="xl"
-            src={
-              selectedImage == null
-                ? profilePicture
-                : URL.createObjectURL(selectedImage)
-            }
-          />
-          <Space h="sm"></Space>
+          <Avatar radius="xl" size="xl" src={profilePicture} />
           <Space h="sm"></Space>
           <Text size="sm" fw={500}>
-            Ganti Password
+            Username
           </Text>
+          <Input component="button" pointer>
+            <Input.Placeholder>
+              <div>{cookies.profile.username}</div>
+            </Input.Placeholder>
+          </Input>
           <Space h="sm"></Space>
+          <Text size="sm" fw={500}>
+            Email
+          </Text>
+          <Input component="button" pointer>
+            <Input.Placeholder>
+              <div>{cookies.profile.email}</div>
+            </Input.Placeholder>
+          </Input>
+          <Space h="sm"></Space>
+          <Text size="sm" fw={500}>
+            Ubah Profil
+          </Text>
+          <Space h="sm" />
           <div>
             {selectedImage ? (
               <div>
@@ -155,33 +164,30 @@ export default function editProfile() {
               </div>
             ) : (
               <div>
+                {/* <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                /> */}
                 <input
                   type="file"
+                  className="block w-full text-sm text-slate-500
+                    file:mr-4 file:rounded-full file:border-0
+                    file:bg-violet-50 file:px-4
+                    file:py-2 file:text-sm
+                    file:font-semibold file:text-violet-700
+                    hover:file:bg-violet-100"
                   accept="image/*"
                   onChange={handleImageUpload}
                 />
               </div>
             )}
           </div>
-          {/* <div className="flex justify-end gap-4 pt-4">
-            <FileInput
-              value={photo}
-              onChange={setPhoto}
-              placeholder="Edit Foto"
-              accept="image/png,image/jpeg"
-              clearable
-              clearButtonProps={{ "aria-label": "Remove photo" }}
-              classNames={{ input: "border-[#4c62f0]" }}
-            />
-            <button
-              type="button"
-              className="rounded-sm bg-[#4c62f0] px-4 py-1 text-sm text-white"
-            >
-              Simpan
-            </button>
-          </div> */}
+          <Space h="sm" />
+          <Text td="underline" size="sm" fw={500}>
+            Ubah Password
+          </Text>
         </Card>
-        <Space h="md"></Space>
 
         {/* Histori Post */}
       </main>
