@@ -82,9 +82,12 @@ export default function Home() {
                       title={complaint.complaint.title}
                       totalUpvotes={complaint.complaint.totalUpvotes}
                       status={complaint.complaint.status}
-                      username={complaint.complaint._id}
+                      username={complaint.username}
                       createdAt={complaint.complaint.createdAt}
                       imageUrl={complaint.complaint.urlComplaint}
+                      profileImageUrl={complaint.urlUser}
+                      is_upvote={complaint.feedback.is_upvote}
+                      is_downvote={complaint.feedback.is_downvote}
                     />
                   );
                 });
@@ -222,7 +225,7 @@ function CreatePost() {
       notifications.show({
         title: "Berhasil",
         message: "Aduan berhasil dibuat",
-        color: "teal",
+        color: "white",
         icon: <img src="/success.gif" alt="success" />,
       });
     },

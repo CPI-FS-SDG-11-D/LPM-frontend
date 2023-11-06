@@ -18,7 +18,7 @@ import { upperFirst } from "@mantine/hooks";
 export function AuthenticationForm(props: PaperProps) {
   const form = useForm({
     initialValues: {
-      username: '',
+      username: "",
       email: "",
       password: "",
       terms: false,
@@ -47,23 +47,26 @@ export function AuthenticationForm(props: PaperProps) {
       return;
     }
     try {
-      const response = await axios.post('https://lpm-api.glitch.me/api/register', {
-        username: form.values.username,
-        email: form.values.email,
-        password: form.values.password,
-      });
-      console.log('Response:', response.data);
-      window.alert('Registration successful!');
+      const response = await axios.post(
+        "https://lpm-api.glitch.me/api/register",
+        {
+          username: form.values.username,
+          email: form.values.email,
+          password: form.values.password,
+        },
+      );
+      console.log("Response:", response.data);
+      window.alert("Registration successful!");
       navigate("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
           window.alert("Email is already registered.");
         } else {
-          console.error('Error:', error);
+          console.error("Error:", error);
         }
       } else {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     }
   };
@@ -121,12 +124,14 @@ export function AuthenticationForm(props: PaperProps) {
             <Checkbox
               label="I accept terms and conditions"
               checked={form.values.terms}
-              onChange={(event) => form.setFieldValue("terms", event.currentTarget.checked)}
+              onChange={(event) =>
+                form.setFieldValue("terms", event.currentTarget.checked)
+              }
             />
           </Stack>
 
           <Group justify="space-between" mt="xl">
-            <Button type="submit" radius="xl">
+            <Button type="submit" radius="xl" className="bg-[#4c62f0]">
               {upperFirst("daftar")}
             </Button>
           </Group>

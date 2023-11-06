@@ -10,8 +10,8 @@ export function SideNav() {
           <NavLink
             to={"/"}
             className={({ isActive }) =>
-              `flex w-full cursor-pointer flex-row place-items-center gap-2 rounded transition hover:bg-[#dbdeeb] ${
-                isActive ? "bg-[#f4f5f9]" : "bg-white"
+              `flex w-full cursor-pointer flex-row place-items-center gap-2 rounded transition hover:bg-[#f4f5f9] ${
+                isActive ? "bg-[#dbdeeb]" : "bg-white"
               } py-3 pl-4 pr-14`
             }
           >
@@ -23,8 +23,8 @@ export function SideNav() {
           <NavLink
             to={"/profile"}
             className={({ isActive }) =>
-              `flex w-full cursor-pointer flex-row place-items-center gap-2 rounded transition hover:bg-[#dbdeeb] ${
-                isActive ? "bg-[#f4f5f9]" : "bg-white"
+              `flex w-full cursor-pointer flex-row place-items-center gap-2 rounded transition hover:bg-[#f4f5f9] ${
+                isActive ? "bg-[#dbdeeb]" : "bg-white"
               } py-3 pl-4 pr-14`
             }
           >
@@ -32,7 +32,7 @@ export function SideNav() {
             <p>Profil</p>
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             to={"/bookmark"}
             className={({ isActive }) =>
@@ -44,7 +44,7 @@ export function SideNav() {
             <Image src="./bookmark.svg" alt="home" h={20} w={20} />
             <p className="text-base">Post Tersimpan</p>
           </NavLink>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

@@ -13,6 +13,8 @@ export type AllComplaints = {
     createdAt: string;
     urlComplaint: string | null;
   };
+  username: string;
+  urlUser: string;
 };
 
 export type ViralComplaints = {
