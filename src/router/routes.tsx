@@ -7,7 +7,7 @@ import ChangePassword from "./changePassword/changePassword";
 import { AuthenticationForm as Register } from "./registerPage/registerPage";
 import Search from "./jelajah";
 import PostDetail from "./detail";
-import EditProfil from "./editProfile/editProfile"
+import EditProfil from "./editProfile/editProfile";
 
 export const appRoutes = [
   {
@@ -32,7 +32,7 @@ export const appRoutes = [
   },
   {
     path: "/changePassword",
-    component: <ChangePassword/>,
+    component: <ChangePassword />,
   },
   {
     path: "/register",

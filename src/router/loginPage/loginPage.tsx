@@ -18,6 +18,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { SERVER_URL } from "../../configs/url";
+import { useCallback } from "react";
 // import { useEffect } from "react";
 
 type ProfileData = {
@@ -78,11 +79,17 @@ export default function LoginPage(props: PaperProps) {
     },
   });
 
-  if (getProfileInfo.isSuccess) {
-    setCookie("profile", JSON.stringify(getProfileInfo.data.user[0]), {
+  const setGo = useCallback(() => {
+    setCookie("profile", JSON.stringify(getProfileInfo?.data?.user[0]), {
       maxAge: 60 * 60 * 23,
     });
-    navigate("/");
+    navigate("/", {
+      replace: true,
+    });
+  }, [getProfileInfo?.data?.user, navigate, setCookie]);
+
+  if (getProfileInfo.isSuccess) {
+    setGo();
   }
 
   // console.log(getProfileInfo.status, postLoginData.status);

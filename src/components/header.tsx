@@ -1,20 +1,22 @@
 import {
   Link,
   useSearchParams,
-  useLocation,
+  // useLocation,
   useNavigate,
 } from "react-router-dom";
 import { Image, Menu, Avatar } from "@mantine/core";
 
 import { useCookies } from "react-cookie";
+import { useState } from "react";
 
 export function TopHeader() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  // const location = useLocation();
   const navigate = useNavigate();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, , removeCookie] = useCookies(["token", "profile"]);
+
+  const [isLoggedIn] = useState(cookies.profile != undefined);
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between rounded-lg bg-white px-20 shadow-sm">
@@ -22,7 +24,7 @@ export function TopHeader() {
         <Link to={"/"} className=" bg-[#4c62f0] px-2 py-2 text-white ">
           LPM
         </Link>
-        {location.pathname === "/" && (
+        {/* {location.pathname === "/" && (
           <ul className="flex flex-row items-center  pb-2">
             <li>
               <button
@@ -49,9 +51,21 @@ export function TopHeader() {
               </button>
             </li>
           </ul>
-        )}
+        )} */}
       </div>
-      {location.pathname !== "/" && (
+      <form action="/jelajah" className="w-1/3 pl-10">
+        <input
+          type="text"
+          name="cari"
+          defaultValue={searchParams.get("cari") ?? ""}
+          className="w-11/12 rounded-lg border-2 border-[#dbdeeb] py-2 pl-4 pr-8 outline-none focus-visible:border-[#4c62f0] "
+          placeholder="Cari disini"
+        />
+        <button type="submit" className="invisible">
+          Cari
+        </button>
+      </form>
+      {/* {location.pathname !== "/" && (
         <form action="/jelajah" className="w-1/3">
           <input
             type="text"
@@ -64,10 +78,10 @@ export function TopHeader() {
             Cari
           </button>
         </form>
-      )}
+      )} */}
 
       <div className="flex items-center gap-4">
-        {location.pathname === "/" && (
+        {/* {location.pathname === "/" && (
           <form action="/jelajah">
             <input
               type="text"
@@ -79,8 +93,8 @@ export function TopHeader() {
               Cari
             </button>
           </form>
-        )}
-        {cookies.profile != undefined ? (
+        )} */}
+        {isLoggedIn ? (
           <Menu
             withArrow
             position="bottom-end"

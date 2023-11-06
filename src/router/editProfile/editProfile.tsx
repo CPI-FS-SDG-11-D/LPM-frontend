@@ -1,15 +1,5 @@
 import { SideNav } from "../../components/navbar";
-import {
-  Avatar,
-  Card,
-  rem,
-  Space,
-  Text,
-  Input,
-  Modal,
-  Button,
-  FileInput,
-} from "@mantine/core";
+import { Avatar, Card, rem, Space, Text, Input } from "@mantine/core";
 import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -27,7 +17,7 @@ type ProfileData = {
   ];
 };
 
-export default function editProfile() {
+export default function EditProfile() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +35,9 @@ export default function editProfile() {
     updatePicture.mutate();
   };
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "profile"]);
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [cookies, setCookie] = useCookies(["token", "profile"]);
+  const [photo] = useState<File | null>(null);
+  const [, setPhotoUrl] = useState<string | null>(null);
   const profilePicture = cookies.profile.urlUser;
   const getProfileInfo = useQuery({
     queryKey: ["profileInfo"],
