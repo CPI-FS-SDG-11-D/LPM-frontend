@@ -108,9 +108,11 @@ export function TimelinePostCard({
             }`}
           />
         </button>
+
         <p className="cursor-default rounded bg-gray-200 p-1 text-sm">
-          {upVote.isLoading ? totalUpvotes + 1 : totalUpvotes}
+          {totalUpvotes}
         </p>
+
         <button
           type="button"
           disabled={cookies?.token == undefined}

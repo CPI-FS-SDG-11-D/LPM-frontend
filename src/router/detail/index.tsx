@@ -248,6 +248,7 @@ export default function PostDetail() {
                   }`}
                 />
               </button>
+
               <p className="rounded bg-gray-200 p-1 text-sm ">
                 {postDetail.data.complaint.totalUpvotes}
               </p>

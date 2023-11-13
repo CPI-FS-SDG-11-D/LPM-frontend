@@ -26,7 +26,7 @@ type UserComplaints = {
     title: string;
     description: string;
     status: string;
-    upvote: number;
+    totalUpvotes: number;
     downvote: number;
     createdAt: string;
   }[];
@@ -135,18 +135,13 @@ export default function Profile() {
               {userComplaints.isSuccess &&
                 userComplaints.data.complaints.map((complaint) => {
                   return (
-                    <Table.Tr>
+                    <Table.Tr key={complaint._id}>
                       <Table.Td>{complaint.title}</Table.Td>
                       <Table.Td>
                         {dayjs(complaint.createdAt).format("DD MMM YYYY")}
                       </Table.Td>
                       <Table.Td>
-                        <button
-                          type="button"
-                          className=" rounded-lg bg-[#4c62f0] px-4 py-2 text-white"
-                        >
-                          {complaint.upvote}
-                        </button>
+                        <p className="text-center">{complaint.totalUpvotes}</p>
                       </Table.Td>
                       <Table.Td>
                         <Menu

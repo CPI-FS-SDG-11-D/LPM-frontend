@@ -219,7 +219,7 @@ function CreatePost() {
     },
     onError: () => alert("Terjadi kesalahan"),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["allComplaints"]);
+      await queryClient.invalidateQueries(["infiniteComplaints"]);
       setPost({ title: "", description: "" });
       setPhoto(null);
       notifications.show({
