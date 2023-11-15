@@ -31,7 +31,7 @@ export const appRoutes = [
     component: <Login />,
   },
   {
-    path: "/changePassword",
+    path: "/change-password",
     component: <ChangePassword />,
   },
   {

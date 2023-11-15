@@ -39,6 +39,8 @@ export default function Profile() {
   const [cookies] = useCookies(["token", "profile"]);
   const navigate = useNavigate();
 
+  const [profilePicture] = useState(cookies?.profile?.urlUser);
+
   // const [profile, setProfile] = useState(["profile"]);
 
   const userComplaints = useQuery({
@@ -62,15 +64,14 @@ export default function Profile() {
   //   }
   // }, [cookies.profile, navigate]);
 
-  if (cookies.profile == undefined) {
-    navigate("/login");
-  }
-  const [profilePicture] = useState(cookies.profile.urlUser);
-
   const navigateToEdit = () => {
     navigate("/editprofil");
   };
 
+  if (cookies.profile == undefined) {
+    navigate("/login");
+    return <div className="text-center">Rerouting...</div>;
+  }
   return (
     <div className="h-full bg-[#f4f5f9] ">
       <TopHeader />

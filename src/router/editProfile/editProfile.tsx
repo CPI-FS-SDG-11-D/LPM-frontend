@@ -1,11 +1,11 @@
 import { SideNav } from "../../components/navbar";
-import { Avatar, Card, rem, Space, Text, Input } from "@mantine/core";
+import { Avatar, Card, rem, Space, Text } from "@mantine/core";
 import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { SERVER_URL } from "../../configs/url";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 type ProfileData = {
   user: [
@@ -75,7 +75,7 @@ export default function EditProfile() {
       getProfileInfo.refetch();
     },
     onError: () => {
-      alert("update gagak!");
+      alert("update gagal!");
     },
   });
 
@@ -111,7 +111,7 @@ export default function EditProfile() {
         >
           <Avatar radius="xl" size="xl" src={profilePicture} />
           <Space h="sm"></Space>
-          <Text size="sm" fw={500}>
+          {/* <Text size="sm" fw={500}>
             Username
           </Text>
           <Input component="button" pointer>
@@ -127,10 +127,10 @@ export default function EditProfile() {
             <Input.Placeholder>
               <div>{cookies.profile.email}</div>
             </Input.Placeholder>
-          </Input>
+          </Input> */}
           <Space h="sm"></Space>
-          <Text size="sm" fw={500}>
-            Ubah Profil
+          <Text size="md" fw={500}>
+            Ubah Foto Profil
           </Text>
           <Space h="sm" />
           <div>
@@ -174,9 +174,11 @@ export default function EditProfile() {
             )}
           </div>
           <Space h="sm" />
-          <Text td="underline" size="sm" fw={500}>
-            Ubah Password
-          </Text>
+          <Link to="/change-password">
+            <Text td="underline" size="sm" fw={500} pt={"lg"}>
+              Ubah Password
+            </Text>
+          </Link>
         </Card>
 
         {/* Histori Post */}
