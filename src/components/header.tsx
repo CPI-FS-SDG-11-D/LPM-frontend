@@ -7,7 +7,7 @@ import {
 import { Image, Menu, Avatar } from "@mantine/core";
 
 import { useCookies } from "react-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function TopHeader() {
   const [searchParams] = useSearchParams();
@@ -16,13 +16,21 @@ export function TopHeader() {
 
   const [cookies, , removeCookie] = useCookies(["token", "profile"]);
 
-  const [isLoggedIn] = useState(cookies.profile != undefined);
+  const [isLoggedIn, setIsLoggedin] = useState(
+    cookies.profile != undefined || cookies.profile != null,
+  );
+
+  useEffect(() => {
+    if (cookies.profile == undefined || cookies.profile == null) {
+      setIsLoggedin(false);
+    }
+  }, [cookies.profile]);
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between rounded-lg bg-white px-20 shadow-sm">
       <div className="flex flex-row items-center gap-8">
         <Link to={"/"} className=" bg-[#4c62f0] px-2 py-2 text-white ">
-          LPM
+          BR
         </Link>
         {/* {location.pathname === "/" && (
           <ul className="flex flex-row items-center  pb-2">
@@ -106,9 +114,9 @@ export function TopHeader() {
             <Menu.Target>
               <div className="flex cursor-pointer flex-row items-center gap-2">
                 <p className="pointer-events-none">
-                  Halo, {cookies.profile.username}
+                  Halo, {cookies?.profile?.username}
                 </p>
-                <Avatar size={"md"} src={cookies.profile.urlUser} />
+                <Avatar size={"md"} src={cookies?.profile?.urlUser} />
                 <Image src="./arrow-down.svg" alt="home" h={15} w={15} />
               </div>
             </Menu.Target>

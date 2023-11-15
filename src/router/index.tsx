@@ -63,7 +63,7 @@ export default function Home() {
 
   return (
     <div className="min-h-[100vh] bg-[#f4f5f9] pb-8">
-      <SideNav />
+      {cookies?.token != undefined && <SideNav />}
 
       <TopHeader />
       <main className="mr-10 h-full pl-64 pt-10">
