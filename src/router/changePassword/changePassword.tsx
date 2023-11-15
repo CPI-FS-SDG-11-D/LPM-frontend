@@ -1,6 +1,5 @@
 import { useForm } from "@mantine/form";
 import {
-  TextInput,
   PasswordInput,
   Text,
   Paper,
@@ -10,37 +9,61 @@ import {
   Stack,
 } from "@mantine/core";
 
+import { useCookies } from "react-cookie";
+
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { SERVER_URL } from "../../configs/url";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePassword(props: PaperProps) {
-  const getAccessToken = useMutation({
+  const [cookies] = useCookies(["token"]);
+  const navigate = useNavigate();
+
+  const changePasswordFetch = useMutation({
     mutationFn: async (reqBody: object) => {
       const response = await axios.post(
-        "https://lpm-api.glitch.me/api/login",
+        `${SERVER_URL}/api/update-password`,
         reqBody,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        },
       );
       return response.data;
     },
-    onError: () => alert("Akun tidak tersedia"),
-    onSuccess(data) {
-      console.log(data);
-      localStorage.setItem("token", data.token);
+    onError: () => {
+      notifications.show({
+        title: "Gagal",
+        message: "Password gagal diubah, coba lagi",
+        color: "red",
+      });
+    },
+    onSuccess() {
+      notifications.show({
+        title: "Berhasil",
+        message: "Password berhasil diubah",
+        color: "white",
+        icon: <img src="/success.gif" alt="success" />,
+      });
+      navigate("/profile");
     },
   });
 
   const form = useForm({
     initialValues: {
-      email: "",
-      password: "",
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      password: (val) =>
-        val.length <= 6
-          ? "Password should include at least 6 characters"
-          : null,
+      newPassword: (val) =>
+        val.length <= 6 ? "Password minimal 6 karakter" : null,
+      confirmPassword: (val, otherVal) =>
+        val !== otherVal.newPassword ? "Passwords tidak sama" : null,
     },
   });
 
@@ -55,75 +78,40 @@ export default function ChangePassword(props: PaperProps) {
 
         <form
           onSubmit={form.onSubmit((value) => {
-            getAccessToken.mutate(value);
+            changePasswordFetch.mutate(value);
           })}
         >
           <Stack>
-            <TextInput
-              required
-              label="Email"
-              placeholder="Masukan email anda"
-              value={form.values.email}
-              onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
-              }
-              error={form.errors.email && "Invalid email"}
-              radius="md"
-            />
-
             <PasswordInput
               required
-              label="Password"
-              placeholder="Masukan kata sandi anda"
-              value={form.values.password}
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
-              error={
-                form.errors.password &&
-                "Password should include at least 6 characters"
-              }
+              label="Password Lama"
+              placeholder="Masukan kata sandi lama anda"
               radius="md"
+              {...form.getInputProps("oldPassword")}
             />
 
             <PasswordInput
               required
               label="Password baru"
               placeholder="Masukan kata sandi baru anda"
-              value={form.values.password}
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
-              error={
-                form.errors.password &&
-                "Password should include at least 6 characters"
-              }
               radius="md"
+              {...form.getInputProps("newPassword")}
             />
 
             <PasswordInput
               required
-              label="Ulangi Password Baru"
-              placeholder="Masukan kata sandi baru anda"
-              value={form.values.password}
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
-              error={
-                form.errors.password &&
-                "Password should include at least 6 characters"
-              }
+              label="Konfirmasi Password Baru"
+              placeholder="Ulangi kata sandi baru anda"
               radius="md"
+              {...form.getInputProps("confirmPassword")}
             />
           </Stack>
 
           <Group justify="space-between" mt="xl">
-            {/* <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
-              {type === 'register'
-                ? 'Already have an account? Login'
-                : "Tidak punya akun? buat disini"}
-            </Anchor> */}
-            <button className="rounded-md bg-[#4c62f0] p-1 px-2 text-sm text-white">
+            <button
+              type="submit"
+              className="rounded-md bg-[#4c62f0] p-1 px-2 text-sm text-white"
+            >
               Ubah
             </button>
           </Group>
