@@ -17,6 +17,7 @@ export default function useVote(postId: string, cookies: { token?: unknown }) {
     onSuccess: () => {
       queryClient.invalidateQueries(["infiniteComplaints"]);
       queryClient.invalidateQueries(["search"]);
+      queryClient.invalidateQueries(["postDetail", postId]);
     },
   });
 
@@ -36,6 +37,7 @@ export default function useVote(postId: string, cookies: { token?: unknown }) {
     onSuccess: () => {
       queryClient.invalidateQueries(["infiniteComplaints"]);
       queryClient.invalidateQueries(["search"]);
+      queryClient.invalidateQueries(["postDetail", postId]);
     },
   });
   return [upVote, downVote];
