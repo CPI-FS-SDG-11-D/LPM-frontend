@@ -15,7 +15,7 @@ export default function useVote(postId: string, cookies: { token?: unknown }) {
       return res.status;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["allComplaints"]);
+      queryClient.invalidateQueries(["infiniteComplaints"]);
       queryClient.invalidateQueries(["search"]);
     },
   });
@@ -34,7 +34,7 @@ export default function useVote(postId: string, cookies: { token?: unknown }) {
       return res.status;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["allComplaints"]);
+      queryClient.invalidateQueries(["infiniteComplaints"]);
       queryClient.invalidateQueries(["search"]);
     },
   });
