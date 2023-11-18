@@ -65,7 +65,7 @@ export default function Profile() {
   // }, [cookies.profile, navigate]);
 
   const navigateToEdit = () => {
-    navigate("/editprofil");
+    navigate("/profile/edit");
   };
 
   if (cookies.profile == undefined) {

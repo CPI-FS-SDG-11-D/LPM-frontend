@@ -1,4 +1,3 @@
-import { SideNav } from "../../components/navbar";
 import { Avatar, Card, rem, Space, Text } from "@mantine/core";
 import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
@@ -6,6 +5,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { SERVER_URL } from "../../configs/url";
 import { useNavigate, Link } from "react-router-dom";
+import { TopHeader } from "../../components/header";
 
 type ProfileData = {
   user: [
@@ -96,7 +96,8 @@ export default function EditProfile() {
 
   return (
     <div className="h-screen bg-[#f4f5f9]">
-      <SideNav />
+      <TopHeader />
+      {/* <SideNav /> */}
 
       <main className="mr-10 h-full pl-64 pt-10">
         <Text className="mt-12" size="md" fw={500}>

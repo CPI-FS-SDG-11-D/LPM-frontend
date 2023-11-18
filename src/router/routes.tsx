@@ -47,7 +47,7 @@ export const appRoutes = [
     component: <PostDetail />,
   },
   {
-    path: "/editprofil",
+    path: "/profile/edit",
     component: <EditProfil />,
   },
 ];
