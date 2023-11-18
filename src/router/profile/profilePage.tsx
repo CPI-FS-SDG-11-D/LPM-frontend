@@ -7,7 +7,7 @@ import {
   Space,
   Text,
   Menu,
-  Image,
+  // Image,
   Input,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -165,19 +165,19 @@ export default function Profile() {
                             <p className="pointer-events-none">
                               {statusTranslate[complaint?.status]}
                             </p>
-                            <Image
+                            {/* <Image
                               src="./arrow-down.svg"
                               alt="home"
                               h={15}
                               w={15}
-                            />
+                            /> */}
                           </div>
                         </Menu.Target>
-                        <Menu.Dropdown
+                        {/* <Menu.Dropdown
                           classNames={{ dropdown: "border border-blue-400" }}
                         >
                           <Menu.Item>Tuntas</Menu.Item>
-                        </Menu.Dropdown>
+                        </Menu.Dropdown> */}
                       </Menu>
                     </Table.Td>
                   </Table.Tr>
