@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { SERVER_URL } from "../../configs/url";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TopHeader } from "../../components/header";
 
 type ProfileData = {
@@ -18,26 +18,28 @@ type ProfileData = {
 };
 
 export default function EditProfile() {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [, setSelectedImage] = useState<File | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
+      setPhoto(file);
     }
   };
 
   const handleImageReset = () => {
     setSelectedImage(null);
+    setPhoto(null);
   };
 
   const handleSubmit = () => {
     updatePicture.mutate();
   };
 
-  const [cookies, setCookie] = useCookies(["token", "profile"]);
-  const [photo] = useState<File | null>(null);
-  const [, setPhotoUrl] = useState<string | null>(null);
+  const [cookies] = useCookies(["token", "profile"]);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const profilePicture = cookies.profile.urlUser;
   const getProfileInfo = useQuery({
     queryKey: ["profileInfo"],
@@ -51,19 +53,19 @@ export default function EditProfile() {
     },
     enabled: false,
   });
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  if (getProfileInfo.isSuccess) {
-    setCookie("profile", JSON.stringify(getProfileInfo.data.user[0]), {
-      maxAge: 60 * 60 * 23,
-    });
-    navigate("/profile");
-  }
+  // if (getProfileInfo.isSuccess) {
+  //   setCookie("profile", JSON.stringify(getProfileInfo.data.user[0]), {
+  //     maxAge: 60 * 60 * 23,
+  //   });
+  //   navigate("/profile");
+  // }
 
   const updatePicture = useMutation({
     mutationFn: async () => {
       const formData = new FormData();
-      formData.append("image", selectedImage as Blob);
+      formData.append("image", photo as Blob);
       await axios.post(`${SERVER_URL}/api/upload-user`, formData, {
         headers: {
           Authorization: `Bearer ${cookies.token}`,
@@ -110,7 +112,7 @@ export default function EditProfile() {
           radius="md"
           withBorder
         >
-          <Avatar radius="xl" size="xl" src={profilePicture} />
+          <Avatar radius="xl" size="xl" src={photoUrl ?? profilePicture} />
           <Space h="sm"></Space>
           {/* <Text size="sm" fw={500}>
             Username
@@ -135,8 +137,8 @@ export default function EditProfile() {
           </Text>
           <Space h="sm" />
           <div>
-            {selectedImage ? (
-              <div>
+            {photo ? (
+              <div className="flex flex-row gap-4">
                 {/* <img src={URL.createObjectURL(selectedImage)} alt="Selected" /> */}
                 <button
                   type="button"
