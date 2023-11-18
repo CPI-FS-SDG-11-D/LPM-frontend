@@ -29,9 +29,14 @@ export function TopHeader() {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between rounded-lg bg-white px-20 shadow-sm">
       <div className="flex flex-row items-center gap-8">
-        <Link to={"/"} className=" bg-[#4c62f0] px-2 py-2 text-white ">
+        {/* <Link to={"/"} className=" bg-[#4c62f0] px-2 py-2 text-white ">
           BR
+        </Link> */}
+
+        <Link to={"/"}>
+          <Image src="/BR-logo.png" alt="logo" h={75} w={85} />
         </Link>
+
         {/* {location.pathname === "/" && (
           <ul className="flex flex-row items-center  pb-2">
             <li>
