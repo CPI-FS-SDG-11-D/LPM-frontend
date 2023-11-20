@@ -255,7 +255,9 @@ function CreatePost() {
             onChange={(e) => setPost({ ...post, description: e.target.value })}
           />
           <div className="max-h-96">
-            <Image src={photoUrl} className="h-full object-contain" />
+            {photoUrl && (
+              <Image src={photoUrl} className="h-full object-contain" />
+            )}
           </div>
         </div>
       </div>
